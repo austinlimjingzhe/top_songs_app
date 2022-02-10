@@ -1,5 +1,5 @@
 # Top Songs Application
-A Python implementation of a YouTube views scraper + Flask application displaying the Top Songs by Views.
+A Python implementation of a YouTube views scraper + Flask application displaying the Top Songs of a Playlist by Weekly Views.
 
 ## Introduction
 Since YouTube has effectively invalidated by previous project on a Dislikes Checker, I was trying to find another YouTube Data API project to work on in my spare time. 
