@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>Hololive Top Songs List</title>
+        <link rel="shortcut icon" href="{{ url_for('static', filename='images/hololive_logo.ico') }}" width="16" height="16"/>
+        <style>
+            h1,select,p,input{text-align:center;font-size:20px;}
+            p.text1{text-align:left;margin-left: 100px; margin-right:100px;}
+            p.text2{text-align:left;margin-left: 100px; margin-right:100px;}
+            .img-container{text-align:center}
+            .container1{display: table;margin: auto;}  
+            .topn-options,.sorting-method{text-align: center;margin: auto;}
+        </style>
+    </head>
+    
+    <body style="background-color:aliceblue;">
+        <div class="img-container">
+            <image src="{{url_for('static',filename='images/Hololive_production_Logo.png')}}" width="600" height="300"/>
+            <p></p>
+            <h1>HoloLive Top Songs List</h1>
+            <h2>Introduction</h2>
+            <p class="text1">
+                This FAN project was inspired by the work done by members of the Hololive community,
+                <a href="https://www.youtube.com/channel/UC94Mhi_4KZNX7bzHaoBnRTw">ホロ歌は癒しの万能薬hololive songs</a> and
+                <a href="https://www.youtube.com/channel/UCfjDIiKHIhKuBxxmJVnW3vg">柊すいかのホロ歌部</a>, 
+                who have spent much effort in compiling the most viewed songs released by the talents of Hololive.
+                Currently being a manual process, this project sought to automate the scraping of view counts
+                and generation of a top N list of songs.               
+            </p>
+            <p class="text2">
+                Scraping is done using the playlist
+                <a href="https://www.youtube.com/playlist?list=PLQmVFdwvZgfXlb2RDXWV1NaPXgYPu786G">ホロライブ歌ってみた / Hololive Songs&Covers</a>
+                via the Youtube Data API every Monday 12AM (+8 GMT). Source code is available at on
+                <a href="https://github.com/austinlimjingzhe">Github</a>.
+            </p>
+            <h2>Instructions:</h2>
+            <p class="text3">
+                Branch: Hold shift/ctrl to select more than 1<br>
+                Song Type: Hold shift/ctrl to select more than 1<br>
+                Week Of: Select only Sundays from 24/01/2022 onwards<br>
+                Top N: Select either 50 or 100 to view the top 50 or 100 songs<br>
+                Sort By: Select to sort on either the Total Views or Weekly Views
+            </p>
+        </div>
+        
+        <div class="container1">
+            <form class="col-sm-20" action="/top_songs" method="post">
+                <p><font size="5">Branch:</font></p>
+                <select name="Branch" class="form-control" style="width:240px" multiple>
+                    <option value="HoloStars">HoloStars</option>
+                    <option value="HololiveJP">HololiveJP</option>
+                    <option value="HololiveEN">HololiveEN</option>
+                    <option value="HololiveID">HololiveID</option>
+                </select>
+                <p><font size="5">Song Type:</font></p>
+                <select name="Song Type" class="form-control" style="width:240px;height:60px" required multiple>
+                  <option value="cover">Cover</option>
+                  <option value="original">Original</option>
+                </select>
+                <p><font size="5">Week Ending On:</font></p>
+                <input type="date" name="Weekof" id="Weekof" step="7" min="2022-01-30" style="width:240px;height:40px" required>
+                <p></p>                
+                <p><font size="5">Top N:</font></p>
+                <div class="topn-options">
+                    <input type="radio" name="topn" id="option1" value="10"> 10 </input<br>
+                    <input type="radio" name="topn" id="option2" value="50"> 50 </input<br>
+                    <input type="radio" name="topn" id="option3" value="100"> 100 </input<br>
+                </div>
+                <p><font size="5">Sort By:</font></p>
+                <div class="sorting-method">
+                    <input type="radio" name="sortmethod" id="optiona" value="Weekly Difference"> Views This Week </input<br>
+                    <input type="radio" name="sortmethod" id="optionb" value="View Count"> Total Views </input<br>
+                </div>
+                <p></p>
+                <p><font size="5"><input type="submit" value="Go!"/></font></p>
+            </form>
+        </div>        
+    </body>
+</html>

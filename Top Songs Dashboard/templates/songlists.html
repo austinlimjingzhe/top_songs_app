@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>Hololive Top Songs List</title>
+        <link rel="shortcut icon" href="{{ url_for('static', filename='images/hololive_logo.ico') }}" width="16" height="16"/>
+        <link rel="stylesheet" href="{{url_for('static',filename='styles/style.css')}}">
+        <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+        <style>
+            select,input,p{text-align:center;font-size:20px}
+            .img-container{text-align:center}
+            .topn-options,.sorting-method{text-align: center;margin: auto;}
+            .song-container{border-color:#0047AB; 
+                            height:150px;border-style: dashed;
+                            width:70%;margin-left:250px;
+                            display: flex; padding:10px 0;
+                            margin:0 auto;}
+        </style>
+    </head>
+    
+    <body style="background-color:aliceblue;">
+        <input type="checkbox" id="check">
+            <label for="check">
+                <i class="fas fa-bars" id="btn"></i>
+                <i class="fas fa-times" id="cancel"></i>
+            </label>
+        
+        <div class="sidebar">
+            <header>Top Viewed Songs</header>
+            <ul>
+                <li><a href="/"><i class="fas fa-home"></i>Home</a></li>
+            </ul>
+            
+            <form class="col-sm-12" action="/top_songs" method="post">
+                <p><font size="5">Branch:</font></p>
+                <select name="Branch" class="form-control" style="width:240px" multiple>
+                    <option value="HoloStars">HoloStars</option>
+                    <option value="HololiveJP">HololiveJP</option>
+                    <option value="HololiveEN">HololiveEN</option>
+                    <option value="HololiveID">HololiveID</option>
+                </select>
+                <p><font size="5">Song Type:</font></p>
+                <select name="Song Type" class="form-control" style="width:240px;height:60px" required multiple>
+                  <option value="cover">Cover</option>
+                  <option value="original">Original</option>
+                </select>
+                <p><font size="5">Week Ending On:</font></p>
+                <input type="date" name="Weekof" id="Weekof" step="7" min="2022-01-30" style="width:240px;height:40px" required>
+                <p></p>
+                <p><font size="5">Top N:</font></p>
+                <div class="topn-options">
+                    <input type="radio" name="topn" id="option1" value="10"> 10 </input<br>
+                    <input type="radio" name="topn" id="option2" value="50"> 50 </input<br>
+                    <input type="radio" name="topn" id="option3" value="100"> 100 </input<br>
+                </div>
+                <p><font size="5">Sort By:</font></p>
+                <div class="sorting-method">
+                    <input type="radio" name="sortmethod" id="optiona" value="Weekly Difference"> Views This Week </input<br>
+                    <input type="radio" name="sortmethod" id="optionb" value="View Count"> Total Views </input<br>
+                </div>
+                <p></p>
+                <p><font size="5"><input type="submit" value="Go!"/></font></p>
+            </form>
+        </div>
+        
+        <div class="container-fluid">
+            <div class="img-container"> <!-- Block parent element -->
+                <image src="{{url_for('static',filename='images/Hololive_production_Logo.png')}}" width="600" height="300"/>
+            </div>
+            <h1 style="font-size:50px;text-align:center">HoloLive Top Songs List</h1>
+            <h2 style="font-size:40px;text-align:center">For the Week Ending On: {{endweek}}</h2>
+            <p></p>
+            {% for x in range(topn) %}
+                {% if x < entries %}
+                    <div class="song-container">
+                        <div class="label-container" style="padding:20px 0;">
+                            {% if content["Date"][x] == "31/01/2022" or content["Previous Rank"][x] == 0 %}
+                            <image src="{{url_for('static',filename='images/new_tag.png')}}" width="100" height="100"/>
+                            {% elif content["Rank"][x] < content["Previous Rank"][x] %}
+                            <image src="{{url_for('static',filename='images/green arrow.png')}}" width="100" height="100"/>
+                            {% elif content["Rank"][x] == content["Previous Rank"][x] %}
+                            <image src="{{url_for('static',filename='images/equals.png')}}" width="100" height="100"/>
+                            {% else %}
+                            <image src="{{url_for('static',filename='images/red arrow.png')}}" width="100" height="100"/>
+                            {% endif %}
+                        </div>
+                        <div class="thumbnail-container" style="padding:20px 0;">
+                            <image src="{{content['Thumbnail'][x]}}"/>
+                        </div>
+                        <div class="info-container" style="padding:20px 0;margin-left:10px">
+                            <h2>#{{x+1}}</h2>
+                            <h3>  {{content["Title"][x]}} / {{content["Channel"][x]}}</h3>
+                            {% if sortmethod == "View Count" %}
+                                <h3>  {{content["View Count"][x]}} Views (This Week: {{content["Weekly Difference"][x]}} Views)</h3>
+                            {% else %}
+                                <h3>  {{content["Weekly Difference"][x]}} Views (Total: {{content["View Count"][x]}} Views)</h3>
+                            {% endif %}
+                            <h4>  Published: {{content["Published"][x]}}</h4>
+                        </div>              
+                    </div>
+                {% endif %}
+            {% endfor %}            
+        </div>        
+    </body>
+</html>
