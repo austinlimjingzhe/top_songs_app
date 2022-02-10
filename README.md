@@ -9,7 +9,7 @@ This project was inspired by the work done by members of the Hololive community,
 The following video shows a demonstration of the application:
 <video src="https://user-images.githubusercontent.com/88301287/153442202-3840a981-303d-4735-986d-ea191c431d21.mp4"></video>
 
-I hope that my work can serve as an example for anyone out there who is also learning and can be generalised to other players contexts. 
+I hope that my work can serve as an example for anyone out there who is also just starting to learn html and flask, and can be generalised to other playlist contexts. 
 
 ### Side Note: Automating the Scraping of Views
-To automate the scraping, the Windows Task Scheduler is used to run the <code>.bat</code> program every week. This will in turn run the <code>scraper.py</code> file to scrape the YouTube Data and store it in CSV files.
+To automate the scraping, the Windows Task Scheduler is used to run the <code>scheduler.bat</code> program every week. This will in turn run the <code>scraper.py</code> file to scrape the YouTube Data and store it in CSV files.
