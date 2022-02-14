@@ -22,7 +22,7 @@ def find_talents(description,title):
         which may not be what we want in terms of filtering
         2. Names could be part of common words or phrases such as the shortened form of Ina'nis' name, Ina. For this reason,
         Kira (HoloStars Gen 1) has been left out of the list. As the author's level of understanding in Japanese language is limited,
-        there may be more similar issues with other names.
+        there may be more similar issues with other names. (Another name that is a known issue is Iroha as it may be a common japanese phrase as well)
         3. Units such as SubaChocoLuna may be in the title and hence return only 1 of the many singers as the other names are abbreviated.
     
     Any alternative algorithm suggestions are welcome.
