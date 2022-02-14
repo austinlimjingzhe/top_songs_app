@@ -59,6 +59,12 @@ def songlist():
         weekly_difference=songs.groupby("Video ID")["View Count"].diff(1).rename("Weekly Difference").fillna(0).astype(int)
         updated_songs=pd.concat([songs,weekly_difference],axis=1)
         
+        age=pd.to_datetime(updated_songs["Date"],infer_datetime_format=True)-pd.to_datetime(updated_songs["Published"],infer_datetime_format=True)
+        age=age.rename("Age")
+        updated_songs=pd.concat([updated_songs,age],axis=1)
+
+        updated_songs["Weekly Difference"]=updated_songs.apply(lambda x: x["View Count"] if x["Age"]>=timedelta(days=7) and x["Age"]<timedelta(days=14) else x["Weekly Difference"],axis=1)
+        
         #filter out premature and auto-generated songs
         updated_songs=updated_songs[updated_songs["Channel"].str.contains("Topic")==False]
         updated_songs=updated_songs[pd.to_datetime(updated_songs["Date"],infer_datetime_format=True)-pd.to_datetime(updated_songs["Published"],infer_datetime_format=True)>=timedelta(days=7)]
