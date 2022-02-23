@@ -59,15 +59,19 @@ def songlist():
         weekly_difference=songs.groupby("Video ID")["View Count"].diff(1).rename("Weekly Difference").fillna(0).astype(int)
         updated_songs=pd.concat([songs,weekly_difference],axis=1)
         
+        monthly_difference=songs.groupby("Video ID")["View Count"].diff(4).rename("Monthly Difference").fillna(0).astype(int)
+        updated_songs=pd.concat([updated_songs,monthly_difference],axis=1)
+        
         age=pd.to_datetime(updated_songs["Date"],infer_datetime_format=True)-pd.to_datetime(updated_songs["Published"],infer_datetime_format=True)
         age=age.rename("Age")
         updated_songs=pd.concat([updated_songs,age],axis=1)
 
-        updated_songs["Weekly Difference"]=updated_songs.apply(lambda x: x["View Count"] if x["Age"]>=timedelta(days=7) and x["Age"]<timedelta(days=14) else x["Weekly Difference"],axis=1)
-        
+        updated_songs["Weekly Difference"]=updated_songs.apply(lambda x: x["View Count"] if x["Age"]>=timedelta(days=7) and x["Age"]<timedelta(days=14) else x["Weekly Difference"], axis=1)
+        updated_songs["Monthly Difference"]=updated_songs.apply(lambda x: x["View Count"] if x["Age"]>=timedelta(days=31) and x["Age"]<timedelta(days=38) else x["Monthly Difference"], axis=1)
+
         #filter out premature and auto-generated songs
         updated_songs=updated_songs[updated_songs["Channel"].str.contains("Topic")==False]
-        updated_songs=updated_songs[pd.to_datetime(updated_songs["Date"],infer_datetime_format=True)-pd.to_datetime(updated_songs["Published"],infer_datetime_format=True)>=timedelta(days=7)]
+        updated_songs=updated_songs[pd.to_datetime(updated_songs["Date"],infer_datetime_format=True)-pd.to_datetime(updated_songs["Published"],infer_datetime_format=True)>timedelta(days=7)]
 
         songs_ofinterest=updated_songs[updated_songs["Is Cover"].isin(songtype)&(updated_songs["Talents"].str.contains("|".join(talents)))]
         ranks=songs_ofinterest.groupby("Date")[sortmethod].rank(method="first",ascending=False).rename("Rank")
@@ -78,8 +82,10 @@ def songlist():
         
         topn_songs=songs_ofinterest[songs_ofinterest["Date"]==weekof].sort_values(by=[sortmethod], ascending=False, ignore_index=True).head(topn)
         topn_songs["Weekly Difference"]=topn_songs["Weekly Difference"].apply(lambda x: f'{x:,}')
+        topn_songs["Monthly Difference"]=topn_songs["Monthly Difference"].apply(lambda x: f'{x:,}')
         topn_songs["View Count"]=topn_songs["View Count"].apply(lambda x: f'{x:,}')
-    return render_template("songlists.html",content=topn_songs, topn=topn, endweek=endweek,sortmethod=sortmethod, entries=len(topn_songs))
+        
+    return render_template("songlists.html",content=topn_songs, topn=topn, endweek=endweek, sortmethod=sortmethod, entries=len(topn_songs))
     
 if __name__=="__main__":
     app.run()
